@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurante Sabores - Administración</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="min-h-screen bg-gradient">
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="header-left">
+                        <div class="logo">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h1 class="header-title">Restaurante Sabores - Administración</h1>
+                    </div>
+
+                    <div class="header-right">
+                        <button class="btn btn-outline notifications-btn">
+                            <i class="fas fa-bell"></i>
+                            Notificaciones
+                            <span class="badge">3</span>
+                        </button>
+                        <button id="logoutBtn" class="btn btn-primary">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Cerrar Sesión
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+
+        <div class="container">
+            <div class="admin-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="orders">
+                        <i class="fas fa-box"></i>
+                        Pedidos
+                    </button>
+                    <button class="tab-btn" data-tab="menu">
+                        <i class="fas fa-eye"></i>
+                        Ver Menú
+                    </button>
+                    <button class="tab-btn" data-tab="edit">
+                        <i class="fas fa-edit"></i>
+                        Editar Menú
+                    </button>
+                    <button class="tab-btn" data-tab="add">
+                        <i class="fas fa-plus"></i>
+                        Agregar Producto
+                    </button>
+                </div>
+
+                <div class="tab-content">
+                    <div id="orders" class="tab-pane active">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Lista de Pedidos</h2>
+                            </div>
+                            <div class="card-content">
+                                <div id="ordersContainer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="menu" class="tab-pane">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Previsualización del Menú</h2>
+                            </div>
+                            <div class="card-content">
+                                <div id="menuPreview" class="menu-grid">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="edit" class="tab-pane">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2>Editar Productos</h2>
+                            </div>
+                            <div class="card-content">
+                                <div id="editProductsList">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="add" class="tab-pane">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 id="formTitle">Agregar Nuevo Producto</h2>
+                            </div>
+                            <div class="card-content">
+                                <form id="productForm" class="product-form">
+                                    <select id="category" class="form-select" required>
+                                        <option value="">Seleccionar categoría</option>
+                                        <option value="Entradas">Entradas</option>
+                                        <option value="Platos Principales">Platos Principales</option>
+                                        <option value="Bebidas">Bebidas</option>
+                                        <option value="Postres">Postres</option>
+                                    </select>
+
+                                    <input type="text" id="productName" placeholder="Nombre del producto" required>
+                                    <input type="number" id="productPrice" placeholder="Precio" min="0" required>
+                                    <input type="url" id="productImage" placeholder="URL de la imagen">
+                                    <textarea id="productDescription" placeholder="Descripción del producto" rows="3"></textarea>
+
+                                    <div class="form-buttons">
+                                        <button type="submit" class="btn btn-success">
+                                            <span id="submitText">Guardar Producto</span>
+                                        </button>
+                                        <button type="button" id="cancelEdit" class="btn btn-outline" style="display: none;">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+<script src="../js/admin.js"></script>
+</body>
+</html>
