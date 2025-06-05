@@ -2,7 +2,7 @@ const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
 
 if (!user || user.role !== 'admin') {
     alert('Acceso denegado. Solo los administradores pueden acceder a esta página.');
-    window.location.href = 'inicioSesion.html';
+    window.location.href = '/html/inicioSesion.html';
 }
 
 let notifications = [
@@ -88,7 +88,7 @@ function showNotification(message, type = 'info') {
         <div style="display: flex; align-items: center; gap: 0.5rem;">
             <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
             <span>${message}</span>
-            <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; margin-left: auto; cursor: pointer; font-size: 1.2rem;">&times;</button>
+            <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; margin-left: auto; cursor: pointer; font-size: 1.2rem;">×</button>
         </div>
     `;
 
@@ -313,7 +313,6 @@ function renderOrders() {
     `).join('');
 }
 
-
 function updateOrderStatus(orderId, newStatus) {
     const allOrders = JSON.parse(localStorage.getItem('orders') || '{}');
     for (const user in allOrders) {
@@ -462,37 +461,43 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.notifications-btn').addEventListener('click', toggleNotificationsPanel);
 
     document.getElementById('logoutBtn').addEventListener('click', function() {
+    try {
+        // Clear session-related data
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('currentUserEmail');
         localStorage.removeItem('cart');
+        
+        // Show success notification
         showNotification('Sesión cerrada correctamente', 'success');
-        setTimeout(() => {
-            window.location.href = 'inicioSesion.html';
-        }, 1000);
+        
+        // Redirect to menu.html
+        window.location.href = 'menu.html'; // Adjust path if needed, e.g., '../menu.html'
+    } catch (error) {
+        console.error('Error during logout:', error);
+        showNotification('Error al cerrar sesión', 'error');
+    }
     });
-
     showNotification('¡Bienvenido al panel de administración!', 'success');
 });
 
-
 function cancelOrder(orderId) {
-  const storedOrders = JSON.parse(localStorage.getItem('orders') || '{}');
-  let updated = false;
+    const storedOrders = JSON.parse(localStorage.getItem('orders') || '{}');
+    let updated = false;
 
-  for (const email in storedOrders) {
-    const index = storedOrders[email].findIndex(order => order.id === orderId);
-    if (index !== -1) {
-      storedOrders[email].splice(index, 1);
-      updated = true;
-      break;
+    for (const email in storedOrders) {
+        const index = storedOrders[email].findIndex(order => order.id === orderId);
+        if (index !== -1) {
+            storedOrders[email].splice(index, 1);
+            updated = true;
+            break;
+        }
     }
-  }
 
-  if (updated) {
-    localStorage.setItem('orders', JSON.stringify(storedOrders));
-    showNotification(`Pedido #${orderId} cancelado correctamente`, 'success');
-    renderOrders(); // vuelve a cargar la lista
-  } else {
-    showNotification(`No se encontró el pedido #${orderId}`, 'error');
-  }
+    if (updated) {
+        localStorage.setItem('orders', JSON.stringify(storedOrders));
+        showNotification(`Pedido #${orderId} cancelado correctamente`, 'success');
+        renderOrders(); // Vuelve a cargar la lista
+    } else {
+        showNotification(`No se encontró el pedido #${orderId}`, 'error');
+    }
 }
-

@@ -67,7 +67,6 @@ const defaultProducts = [
 
 // Combinar productos por defecto con productos agregados por el admin
 const combinedProducts = [...defaultProducts];
-
 adminProducts.forEach(adminProduct => {
     if (!combinedProducts.some(p => p.id === adminProduct.id)) {
         combinedProducts.push(adminProduct);
@@ -145,7 +144,7 @@ function updateCartUI() {
                     <button class="cart-preview-btn" onclick="removeFromCart(${item.id})">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <button class="cart-preview-btn" onclick="addToCart(${JSON.stringify(item).replace(/"/g, '&quot;')})">
+                    <button class="cart-preview-btn" onclick="addToCart(${JSON.stringify(item).replace(/"/g, '"')})">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
@@ -191,7 +190,7 @@ function renderMenu() {
                                     <button class="btn btn-outline btn-sm" onclick="showProductModal(${product.id})">
                                         Ver Detalles
                                     </button>
-                                    <button class="btn btn-success btn-sm" onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                                    <button class="btn btn-success btn-sm" onclick="addToCart(${JSON.stringify(product).replace(/"/g, '"')})">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </div>
@@ -219,7 +218,7 @@ function showProductModal(productId) {
         <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 12rem; object-fit: cover; border-radius: 0.5rem; margin-bottom: 1rem;">
         <div style="display: flex; align-items: center; justify-content: space-between;">
             <span style="font-size: 1.875rem; font-weight: bold; color: #059669;">$${product.price.toLocaleString()}</span>
-            <button class="btn btn-success" onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')}); closeModal()">
+            <button class="btn btn-success" onclick="addToCart(${JSON.stringify(product).replace(/"/g, '"')}); closeModal()">
                 Agregar al Carrito
             </button>
         </div>
@@ -252,55 +251,52 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-function updateAuthUI() {
-    const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+// Verificar usuario autenticado al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    const existingUsers = JSON.parse(localStorage.getItem('restaurantUsers') || '[]');
+    const currentUserEmail = localStorage.getItem('currentUserEmail');
     const userInfo = document.getElementById('userInfo');
     const guestInfo = document.getElementById('guestInfo');
-    const userName = document.getElementById('userName');
     const adminBtn = document.getElementById('adminBtn');
+    const userName = document.getElementById('userName');
+    const logoutBtn = document.getElementById('logoutBtn');
 
-    if (user) {
-        userInfo.style.display = 'flex';
-        guestInfo.style.display = 'none';
-        userName.textContent = `Hola, ${user.name}`;
-        
-        if (user.role === 'admin') {
-            adminBtn.style.display = 'block';
+    // Renderizar el menú y carrito
+    renderMenu();
+    updateCartUI();
+
+    if (currentUserEmail) {
+        const user = existingUsers.find(u => u.email === currentUserEmail);
+        if (user) {
+            // Mostrar información del usuario si no es admin
+            if (!user.isAdmin) {
+                guestInfo.style.display = 'none';
+                userInfo.style.display = 'flex';
+                userName.textContent = `¡Hola! ${user.name}`;
+                adminBtn.style.display = 'none';
+            } else {
+                // Si es admin, mostrar botón de administración
+                guestInfo.style.display = 'none';
+                userInfo.style.display = 'flex';
+                userName.textContent = `¡Hola! ${user.name} (Admin)`;
+                adminBtn.style.display = 'block';
+            }
         }
     } else {
         userInfo.style.display = 'none';
         guestInfo.style.display = 'block';
         adminBtn.style.display = 'none';
     }
-}
 
-function logout() {
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('cart');
-    showNotification('Sesión cerrada correctamente', 'success');
-    setTimeout(() => {
-        window.location.href = 'inicioSesion.html';
-    }, 1000);
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    updateAuthUI();
-    renderMenu();
-    updateCartUI();
-    
     const modal = document.getElementById('productModal');
     const closeBtn = document.querySelector('.close');
     const confirmModal = document.getElementById('confirmModal');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const cancelLogout = document.getElementById('cancelLogout');
-    const confirmLogout = document.getElementById('confirmLogout');
-    
     if (closeBtn) {
         closeBtn.addEventListener('click', closeModal);
     }
-    
+
     if (modal) {
-        modal.addEventListener('click', function(e) {
+        modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 closeModal();
             }
@@ -309,27 +305,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
-            confirmModal.classList.add('show');
+            confirmModal.style.display = 'block';
         });
     }
 
+    const cancelLogout = document.getElementById('cancelLogout');
+    const confirmLogout = document.getElementById('confirmLogout');
+
     if (cancelLogout) {
         cancelLogout.addEventListener('click', () => {
-            confirmModal.classList.remove('show');
+            confirmModal.style.display = 'none';
         });
     }
 
     if (confirmLogout) {
         confirmLogout.addEventListener('click', () => {
-            confirmModal.classList.remove('show');
-            logout();
+            // Eliminar datos de la sesión
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('currentUserEmail');
+            localStorage.removeItem('cart');
+            userInfo.style.display = 'none';
+            guestInfo.style.display = 'block';
+            adminBtn.style.display = 'none';
+            confirmModal.style.display = 'none';
+            showNotification('Has cerrado sesión exitosamente', 'success');
+            setTimeout(() => {
+                window.location.href = 'menu.html'; // Recargar menu.html sin usuario
+            }, 1000);
         });
     }
 
     if (confirmModal) {
         confirmModal.addEventListener('click', (e) => {
             if (e.target === confirmModal) {
-                confirmModal.classList.remove('show');
+                confirmModal.style.display = 'none';
             }
         });
     }

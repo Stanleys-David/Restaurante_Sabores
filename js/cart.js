@@ -33,7 +33,7 @@ function renderCartItems() {
       <div class="empty-cart">
         <i class="fas fa-shopping-cart"></i>
         <p>Tu carrito está vacío</p>
-        <a href="menu.html" class="btn btn-primary">Ir al Menú</a>
+        <a href="/html/menu.html" class="btn btn-primary">Ir al Menú</a>
       </div>
     `;
     orderForm.style.display = 'none';
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
     localStorage.removeItem('cart');
     showNotification('Sesión cerrada correctamente', 'success');
     setTimeout(() => {
-      window.location.href = 'inicioSesion.html';
+      window.location.href = '/html/inicioSesion.html';
     }, 1000);
   });
 });
