@@ -279,7 +279,7 @@ function logout() {
     localStorage.removeItem('cart');
     showNotification('Sesión cerrada correctamente', 'success');
     setTimeout(() => {
-        window.location.href = 'index.html';
+        window.location.href = 'inicioSesion.html';
     }, 1000);
 }
 

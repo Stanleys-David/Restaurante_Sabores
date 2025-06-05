@@ -2,7 +2,7 @@ const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
 
 if (!user || user.role !== 'admin') {
     alert('Acceso denegado. Solo los administradores pueden acceder a esta página.');
-    window.location.href = 'index.html';
+    window.location.href = 'inicioSesion.html';
 }
 
 let notifications = [
@@ -466,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.removeItem('cart');
         showNotification('Sesión cerrada correctamente', 'success');
         setTimeout(() => {
-            window.location.href = 'index.html';
+            window.location.href = 'inicioSesion.html';
         }, 1000);
     });
 

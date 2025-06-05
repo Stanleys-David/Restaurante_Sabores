@@ -79,7 +79,7 @@ function showNotification(message, type = 'info') {
                 document.getElementById('registerForm').reset();
                 
                 setTimeout(() => {
-                    window.location.href = 'index.html?registered=true';
+                    window.location.href = 'inicioSesion?registered=true';
                 }, 1500);
             }, 1000);
         });

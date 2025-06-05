@@ -134,7 +134,7 @@ function reorderItems(orderId) {
 document.addEventListener('DOMContentLoaded', function () {
   const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
   if (!user) {
-    window.location.href = 'index.html';
+    window.location.href = 'inicioSesion.html';
     return;
   }
 
@@ -143,6 +143,6 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('logoutBtn').addEventListener('click', function () {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('cart');
-    window.location.href = 'index.html';
+    window.location.href = 'inicioSesion.html';
   });
 });
